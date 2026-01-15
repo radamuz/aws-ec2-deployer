@@ -5,7 +5,10 @@ ENV PATH=$CATALINA_HOME/bin:$PATH
 
 WORKDIR /root
 
-RUN tee /etc/yum.repos.d/CentOS-Base.repo > /dev/null <<'EOF'
+ARG TARGETARCH
+
+RUN if [ "$TARGETARCH" = "arm64" ] || [ "$TARGETARCH" = "arm" ]; then \
+    tee /etc/yum.repos.d/CentOS-Base.repo > /dev/null <<'EOF' \
 [base]
 name=CentOS-7 - Base
 baseurl=http://vault.centos.org/altarch/7.9.2009/os/$basearch/
@@ -24,6 +27,27 @@ baseurl=http://vault.centos.org/altarch/7.9.2009/extras/$basearch/
 gpgcheck=0
 gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-CentOS-7
 EOF
+else \
+    tee /etc/yum.repos.d/CentOS-Base.repo > /dev/null <<'EOF' \
+[base]
+name=CentOS-7 - Base
+baseurl=http://vault.centos.org/7.9.2009/os/$basearch/
+gpgcheck=0
+gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-CentOS-7
+
+[updates]
+name=CentOS-7 - Updates
+baseurl=http://vault.centos.org/7.9.2009/updates/$basearch/
+gpgcheck=0
+gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-CentOS-7
+
+[extras]
+name=CentOS-7 - Extras
+baseurl=http://vault.centos.org/7.9.2009/extras/$basearch/
+gpgcheck=0
+gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-CentOS-7
+EOF
+fi
 
 RUN yum -y update && \
     yum -y install curl java-1.7.0-openjdk-devel && \
