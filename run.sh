@@ -1,10 +1,17 @@
 #!/bin/bash
 
-echo "Lista de Dockerfiles:"
-ls dockerfiles
+DOCKERFILES=(dockerfiles/*)
 
-read -p "Elige un Dockerfile: " DOCKERFILE
+echo "Elige un Dockerfile:"
 
-DOCKERFILE_PATH="dockerfiles/$DOCKERFILE"
+select DOCKERFILE_PATH in "${DOCKERFILES[@]}"; do
+  if [[ -n "$DOCKERFILE_PATH" ]]; then
+    echo "Has elegido: $DOCKERFILE_PATH"
+    break
+  else
+    echo "Opción inválida, prueba otra vez."
+  fi
+done
 
-bash scripts/docker-build.sh $DOCKERFILE_PATH
+
+bash scripts/docker-build.sh "$DOCKERFILE_PATH"
