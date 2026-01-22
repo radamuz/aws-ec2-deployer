@@ -29,9 +29,16 @@ fi
 docker buildx inspect --bootstrap >/dev/null
 # Fin Asegurar construcción multi-plataforma con docker buildx
 
-# Construir la imagen y exportar a tar OCI
+# Asegurarse de que existe la carpeta tars
 mkdir -p tars
+# Fin Asegurarse de que existe la carpeta tars
+
+# Construir la imagen y exportar a tar OCI
+BUILD_OCI_IMAGE=true
+if $BUILD_OCI_IMAGE; then
 docker buildx build --platform linux/arm64,linux/amd64 \
     --output "type=oci,dest=tars/$DOCKERFILE_NAME.oci.tar" \
     -t "$DOCKERFILE_NAME" \
     "$DOCKERFILE_PATH"
+fi
+# Fin Construir la imagen y exportar a tar OCI
