@@ -34,7 +34,7 @@ mkdir -p tars
 # Fin Asegurarse de que existe la carpeta tars
 
 # Construir la imagen y exportar a tar OCI
-BUILD_OCI_IMAGE=true
+BUILD_OCI_IMAGE=false
 if $BUILD_OCI_IMAGE; then
 docker buildx build --platform linux/arm64,linux/amd64 \
     --output "type=oci,dest=tars/$DOCKERFILE_NAME.oci.tar" \
@@ -42,3 +42,23 @@ docker buildx build --platform linux/arm64,linux/amd64 \
     "$DOCKERFILE_PATH"
 fi
 # Fin Construir la imagen y exportar a tar OCI
+
+# Construir la imagen y exportar a tar AMD64
+BUILD_AMD64_IMAGE=true
+if $BUILD_AMD64_IMAGE; then
+docker buildx build --platform linux/amd64 \
+    --output "type=docker,dest=tars/$DOCKERFILE_NAME.amd64.tar" \
+    -t "$DOCKERFILE_NAME" \
+    "$DOCKERFILE_PATH"
+fi
+# Fin Construir la imagen y exportar a tar AMD64
+
+# Construir la imagen y exportar a tar ARM64
+BUILD_ARM64_IMAGE=true
+if $BUILD_ARM64_IMAGE; then
+docker buildx build --platform linux/arm64 \
+    --output "type=docker,dest=tars/$DOCKERFILE_NAME.arm64.tar" \
+    -t "$DOCKERFILE_NAME" \
+    "$DOCKERFILE_PATH"
+fi
+# Fin Construir la imagen y exportar a tar ARM64
