@@ -25,7 +25,7 @@ fi
 # Fin Arrancar proceso de construcción de imágenes Docker
 
 # Elegir un perfil de AWS 
-AWS_PROFILES=($(aws configure list-profiles))
+AWS_PROFILES=($(aws configure list-profiles | sort))
 echo "Elige un perfil de AWS:"
 select AWS_PROFILE in "${AWS_PROFILES[@]}"; do
   if [[ -n "$AWS_PROFILE" ]]; then
@@ -39,17 +39,8 @@ done
 # Fin Elegir un perfil de AWS 
 
 # Elige una región de AWS
-AWS_REGIONS=($(aws ec2 describe-regions --query "Regions[].RegionName" --output text))
-echo "Elige una región de AWS:"
-select AWS_REGION in "${AWS_REGIONS[@]}"; do
-  if [[ -n "$AWS_REGION" ]]; then
-    echo "Has elegido la región de AWS: $AWS_REGION"
-    export AWS_REGION
-    break
-  else
-    echo "Opción inválida, prueba otra vez."
-  fi
-done
+source ./scripts/select-aws-region.sh
+echo -e "AWS_REGION: $AWS_REGION"
 # Fin Elige una región de AWS
 
 # Test de credenciales
