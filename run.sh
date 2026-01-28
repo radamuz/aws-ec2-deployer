@@ -213,9 +213,11 @@ if $CREATE_EC2; then
     echo -e "${CYAN}Inicio Bloque Si la EC2 existe obtener el INSTANCE_ID${NC}"
     echo "✅ La EC2 '$APP_NAME' ya existe."
     INSTANCE_ID=$(
-      aws ec2 describe-instances \
-      --filters Name=tag:Name,Values="$APP_NAME" \
-      --query 'Reservations[0].Instances[0].InstanceId' \
+    aws ec2 describe-instances \
+      --filters \
+        Name=tag:Name,Values="$APP_NAME" \
+        Name=instance-state-name,Values=running \
+      --query 'sort_by(Reservations[].Instances[], &LaunchTime)[-1].InstanceId' \
       --output text)
     echo "✅ INSTANCE_ID: $INSTANCE_ID"
 
