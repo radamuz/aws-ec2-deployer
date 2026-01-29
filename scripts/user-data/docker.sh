@@ -11,4 +11,8 @@ APP_NAME=$(aws ec2 describe-tags \
   --query 'Tags[0].Value' \
   --output text)
 
+echo "Install awscli"
+
+apt install awscli -y
+
 hostnamectl set-hostname "$APP_NAME"
