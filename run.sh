@@ -189,6 +189,21 @@ source scripts/check-ec2-name.sh
 echo -e "${GREEN}Fin Bloque Comprobar si existe la EC2${NC}"
 # Fin comprobar si existe la EC2
 
+# Elegir el fichero user-data
+echo -e "${CYAN}Inicio Bloque Elegir el fichero user-data${NC}"
+echo "Elige el fichero user-data:"
+select USER_DATA_FILE in $(ls scripts/user-data/); do
+  if [[ -n "$USER_DATA_FILE" ]]; then
+    echo "Has elegido el fichero user-data: $USER_DATA_FILE"
+    export USER_DATA_PATH="scripts/user-data/$USER_DATA_FILE"
+    break
+  else
+    echo "Opción inválida, prueba otra vez."
+  fi
+done
+echo -e "${GREEN}Fin Bloque Elegir el fichero user-data${NC}"
+# Fin Elegir el fichero user-data
+
 # Elegir el instance type de AWS
 echo -e "${CYAN}Inicio Bloque Elegir el instance type de AWS${NC}"
 echo "Elige el instance type de AWS:"
@@ -246,6 +261,7 @@ if $CREATE_EC2; then
       --key-name "$PEM_KEY_NAME" \
       --security-group-ids "$SECURITY_GROUP_ID" \
       --subnet-id "$SUBNET_ID" \
+      --user-data file://"$USER_DATA_PATH" \
       --tag-specifications "ResourceType=instance,Tags=[{Key=Name,Value=$APP_NAME}]" | jq)
     # Fin Arrancar nueva instancia EC2
 
@@ -274,7 +290,13 @@ echo -e "${CYAN}Inicio Bloque Informar al usuario de que puede acceder a la máq
 echo -e "Puedes acceder a la máquina a través del siguiente comando:"
 PEM_KEY_REALPATH=$(realpath "$PEM_KEY_PATH")
 echo "chmod 600 $PEM_KEY_REALPATH"
+echo "------------------CONECTAR-----------------"
 echo "ssh -i $PEM_KEY_REALPATH ubuntu@$PUBLIC_IP"
+echo "-------------------------------------------"
+echo "------------------DEGUG--------------------"
+echo "ssh -i $PEM_KEY_REALPATH ubuntu@$PUBLIC_IP \"cat /var/log/cloud-init-output.log\""
+echo "ssh -i $PEM_KEY_REALPATH ubuntu@$PUBLIC_IP \"cat /var/log/cloud-init.log\""
+echo "-------------------------------------------"
 echo -e "${GREEN}Fin Bloque Informar al usuario de que puede acceder a la máquina a través del siguiente comando${NC}"
 # Fin Informar al usuario de que puede acceder a la máquina a través del siguiente comando
 
