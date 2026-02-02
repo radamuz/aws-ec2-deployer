@@ -89,3 +89,9 @@ echo -e "${CYAN}Start Docker installation${NC}"
 sudo apt install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin -y
 echo -e "${GREEN}End Docker installation${NC}"
 # End Docker installation
+
+# Start Add ubuntu user to the docker group
+echo -e "${CYAN}Start Add ubuntu user to the docker group${NC}"
+sudo usermod -aG docker ubuntu
+echo -e "${GREEN}End Add ubuntu user to the docker group${NC}"
+# End Add ubuntu user to the docker group
