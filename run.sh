@@ -38,7 +38,7 @@ echo -e "${GREEN}Fin Bloque Elegir un Dockerfile${NC}"
 echo -e "${CYAN}Inicio Bloque Arrancar proceso de construcción de imágenes Docker${NC}"
 RUN_DOCKER_BUILD=true
 if $RUN_DOCKER_BUILD; then
-  bash scripts/docker-build.sh "$DOCKERFILE_PATH"
+  source scripts/docker-build.sh "$DOCKERFILE_PATH"
 fi
 echo -e "${GREEN}Fin Bloque Arrancar proceso de construcción de imágenes Docker${NC}"
 # Fin Arrancar proceso de construcción de imágenes Docker
@@ -218,10 +218,23 @@ source scripts/ec2/create.sh
 echo -e "${GREEN}Fin Bloque Si la EC2 no existe entonces creala scripts/ec2/create.sh${NC}"
 # Fin Si la EC2 no existe entonces creala scripts/ec2/create.sh
 
+# Esperar a que la instancia esté arrancada
+echo -e "${CYAN}Inicio Bloque Esperar a que la instancia esté arrancada${NC}"
+aws ec2 wait instance-running --instance-ids "$INSTANCE_ID"
+echo -e "${GREEN}Fin Bloque Esperar a que la instancia esté arrancada${NC}"
+# Fin Esperar a que la instancia esté arrancada
+
+# Inicio Enviar imagen de contenedor a la máquina EC2
+echo -e "${CYAN}Inicio Bloque Enviar imagen de contenedor a la máquina EC2${NC}"
+PEM_KEY_REALPATH=$(realpath "$PEM_KEY_PATH")
+ssh -i $PEM_KEY_REALPATH ubuntu@$PUBLIC_IP "mkdir -p ~/$APP_NAME"
+scp -i "$PEM_KEY_REALPATH" "tars/$DOCKERFILE_NAME.arm64.tar" ubuntu@"$PUBLIC_IP":~/$APP_NAME
+echo -e "${GREEN}Fin Bloque Enviar imagen de contenedor a la máquina EC2${NC}"
+# Fin Enviar imagen de contenedor a la máquina EC2
+
 # Informar al usuario de que puede acceder a la máquina a través del siguiente comando
 echo -e "${CYAN}Inicio Bloque Informar al usuario de que puede acceder a la máquina a través del siguiente comando${NC}"
 echo -e "Puedes acceder a la máquina a través del siguiente comando:"
-PEM_KEY_REALPATH=$(realpath "$PEM_KEY_PATH")
 echo "chmod 600 $PEM_KEY_REALPATH"
 echo "------------------CONECTAR-----------------"
 echo "ssh -i $PEM_KEY_REALPATH ubuntu@$PUBLIC_IP"
