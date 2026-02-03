@@ -80,13 +80,11 @@ fi
 echo -e "${GREEN}Fin Bloque Test de credenciales${NC}"
 # Fin Test de credenciales
 
-# Introduce el nombre del aplicativo a desplegar
-echo -e "${CYAN}Inicio Bloque Introduce el nombre del aplicativo a desplegar${NC}"
-read -p "Nombre del aplicativo: " APP_NAME
-APP_NAME=${APP_NAME:-aws-ec2-docker-deployer}
-APP_NAME=${APP_NAME}-aedd
-echo -e "${GREEN}Fin Bloque Introduce el nombre del aplicativo a desplegar${NC}"
-# Fin Introduce el nombre del aplicativo a desplegar
+# Introduce el nombre del aplicativo a desplegar scripts/select-app-name.sh
+echo -e "${CYAN}Inicio Bloque Introduce el nombre del aplicativo a desplegar scripts/select-app-name.sh${NC}"
+source scripts/select-app-name.sh
+echo -e "${GREEN}Fin Bloque Introduce el nombre del aplicativo a desplegar scripts/select-app-name.sh${NC}"
+# Fin Introduce el nombre del aplicativo a desplegar scripts/select-app-name.sh
 
 # Asegurarse de que existe la carpeta keypairs
 echo -e "${CYAN}Inicio Bloque Asegurarse de que existe la carpeta keypairs${NC}"
