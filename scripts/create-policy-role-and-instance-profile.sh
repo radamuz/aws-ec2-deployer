@@ -70,6 +70,9 @@ for i in {1..12}; do
   sleep 1
 done
 
+echo "⏳ Esperando 10 segundos adicionales para asegurar la propagación de cambios..."
+sleep 10
+
 echo
 echo "✅ TODO LISTO"
 echo "Instance Profile: $INSTANCE_PROFILE_NAME"

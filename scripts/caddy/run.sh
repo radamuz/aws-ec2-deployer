@@ -28,3 +28,7 @@ while true; do
         esac
     done
 done
+
+if [[ -n "$DOMAIN_NAME" ]]; then
+    source scripts/caddy/installation.sh
+fi

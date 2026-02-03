@@ -38,7 +38,7 @@ if $CREATE_EC2; then
       --key-name "$PEM_KEY_NAME" \
       --security-group-ids "$SECURITY_GROUP_ID" \
       --subnet-id "$SUBNET_ID" \
-      --iam-instance-profile Name="$INSTANCE_PROFILE_NAME" \
+      --iam-instance-profile Name=$INSTANCE_PROFILE_NAME \
       --user-data file://"$USER_DATA_PATH" \
       --tag-specifications "ResourceType=instance,Tags=[{Key=Name,Value=$APP_NAME},{Key=Name2,Value=$APP_NAME}]" | jq)
     # Fin Arrancar nueva instancia EC2

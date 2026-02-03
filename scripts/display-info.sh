@@ -1,5 +1,4 @@
 echo -e "Puedes acceder a la máquina a través del siguiente comando:"
-echo "chmod 600 $PEM_KEY_REALPATH"
 echo "------------------DEGUG--------------------"
 echo "ssh -i $PEM_KEY_REALPATH ubuntu@$PUBLIC_IP \"cat /var/log/cloud-init-output.log\""
 echo "ssh -i $PEM_KEY_REALPATH ubuntu@$PUBLIC_IP \"cat /var/log/cloud-init.log\""

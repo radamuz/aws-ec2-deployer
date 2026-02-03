@@ -15,3 +15,4 @@ if $CREATE_KEY_PAIR; then
       --output text > "$PEM_KEY_PATH"
   fi
 fi
+chmod 600 "$PEM_KEY_REALPATH"
