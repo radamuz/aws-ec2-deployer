@@ -212,11 +212,11 @@ INSTANCE_PROFILE_NAME="$APP_NAME-instance-profile"
 echo -e "${GREEN}Fin Bloque Crear policy, role e instance profile${NC}"
 # Fin Crear policy, role e instance profile
 
-# Si la EC2 no existe entonces creala
-echo -e "${CYAN}Inicio Bloque Si la EC2 no existe entonces creala${NC}"
+# Si la EC2 no existe entonces creala scripts/ec2/create.sh
+echo -e "${CYAN}Inicio Bloque Si la EC2 no existe entonces creala scripts/ec2/create.sh${NC}"
 source scripts/ec2/create.sh
-echo -e "${GREEN}Fin Bloque Si la EC2 no existe entonces creala${NC}"
-# Fin Si la EC2 no existe entonces creala
+echo -e "${GREEN}Fin Bloque Si la EC2 no existe entonces creala scripts/ec2/create.sh${NC}"
+# Fin Si la EC2 no existe entonces creala scripts/ec2/create.sh
 
 # Informar al usuario de que puede acceder a la máquina a través del siguiente comando
 echo -e "${CYAN}Inicio Bloque Informar al usuario de que puede acceder a la máquina a través del siguiente comando${NC}"
@@ -239,8 +239,8 @@ mkdir -p logs
 echo -e "${GREEN}Fin Bloque Asegurarse de que existe la carpeta logs${NC}"
 # Fin Asegurarse de que existe la carpeta logs
 
-# Guardar registro de variables usadas
-echo -e "${CYAN}Inicio Bloque Guardar registro de variables usadas${NC}"
+# Guardar registro de variables usadas scripts/write-log.sh
+echo -e "${CYAN}Inicio Bloque Guardar registro de variables usadas scripts/write-log.sh${NC}"
 source scripts/write-log.sh
-echo -e "${GREEN}Fin Bloque Guardar registro de variables usadas${NC}"
-# Fin Guardar registro de variables usadas
+echo -e "${GREEN}Fin Bloque Guardar registro de variables usadas scripts/write-log.sh${NC}"
+# Fin Guardar registro de variables usadas scripts/write-log.sh
