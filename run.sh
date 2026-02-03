@@ -239,13 +239,25 @@ done
 echo -e "${GREEN}Fin Bloque Comprobar si hay conexión SSH${NC}"
 # Fin Bloque Comprobar si hay conexión SSH
 
+# Inicio Bloque az un for i in {1..12} para comprobar con ssh si ya se ha instalado docker
+echo -e "${CYAN}Inicio Bloque Comprobar si Docker está instalado${NC}"
+for i in {1..12}; do
+  if ssh -o ConnectTimeout=5 -i "$PEM_KEY_REALPATH" ubuntu@"$PUBLIC_IP" "docker --version"; then
+    echo -e "${GREEN}Docker está instalado en el intento $i${NC}"
+    break
+  else
+    echo -e "${YELLOW}Intento $i: Docker no está instalado${NC}"
+    sleep 10
+  fi
+done
+
 # Inicio Enviar imagen de contenedor a la máquina EC2
 echo -e "${CYAN}Inicio Bloque Enviar imagen de contenedor a la máquina EC2${NC}"
 ssh -i $PEM_KEY_REALPATH ubuntu@$PUBLIC_IP "mkdir -p ~/$APP_NAME"
 scp -i "$PEM_KEY_REALPATH" "tars/$DOCKERFILE_NAME.arm64.tar" ubuntu@"$PUBLIC_IP":~/$APP_NAME
 scp -i "$PEM_KEY_REALPATH" "dockerfiles/$DOCKERFILE_NAME/docker-compose.yml" ubuntu@"$PUBLIC_IP":~/$APP_NAME
 ssh -t -i $PEM_KEY_REALPATH ubuntu@$PUBLIC_IP "docker load -i ~/$APP_NAME/$DOCKERFILE_NAME.arm64.tar"
-ssh -t -i $PEM_KEY_REALPATH ubuntu@$PUBLIC_IP "cd ~/$APP_NAME && docker-compose up -d"
+ssh -t -i $PEM_KEY_REALPATH ubuntu@$PUBLIC_IP "cd ~/$APP_NAME && docker compose up -d"
 echo -e "${GREEN}Fin Bloque Enviar imagen de contenedor a la máquina EC2${NC}"
 # Fin Enviar imagen de contenedor a la máquina EC2
 
