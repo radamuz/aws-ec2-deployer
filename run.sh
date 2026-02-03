@@ -96,22 +96,7 @@ echo -e "${GREEN}Fin Bloque Asegurarse de que existe la carpeta keypairs${NC}"
 
 # Crear key pair
 echo -e "${CYAN}Inicio Bloque Crear key pair${NC}"
-CREATE_KEY_PAIR=true
-PEM_KEY_NAME="$APP_NAME.$AWS_REGION.$AWS_PROFILE"
-PEM_KEY_PATH="keypairs/$PEM_KEY_NAME.pem"
-if $CREATE_KEY_PAIR; then
-  if aws ec2 describe-key-pairs \
-      --query "KeyPairs[?KeyName=='$PEM_KEY_NAME']" \
-      --output text | grep -q "$PEM_KEY_NAME"; then
-    echo "✅ El key pair existe"
-  else
-    echo "❌ El key pair NO existe"
-    aws ec2 create-key-pair \
-      --key-name "$PEM_KEY_NAME" \
-      --query 'KeyMaterial' \
-      --output text > "$PEM_KEY_PATH"
-  fi
-fi
+source scripts/ec2/create-key-pair.sh
 echo -e "${GREEN}Fin Bloque Crear key pair${NC}"
 # Fin crear key pair
 
@@ -256,22 +241,6 @@ echo -e "${GREEN}Fin Bloque Asegurarse de que existe la carpeta logs${NC}"
 
 # Guardar registro de variables usadas
 echo -e "${CYAN}Inicio Bloque Guardar registro de variables usadas${NC}"
-LOG_FILE="logs/$(date '+%Y-%m-%d_%H-%M-%S').log"
-{
-  echo "LOG_FILE=$LOG_FILE"
-  echo "DOCKERFILE_PATH=${DOCKERFILE_PATH-UNDEFINED}"
-  echo "AWS_PROFILE=${AWS_PROFILE-UNDEFINED}"
-  echo "AWS_REGION=${AWS_REGION-UNDEFINED}"
-  echo "AWS_STS_GET_CALLER_IDENTITY=${AWS_STS_GET_CALLER_IDENTITY-UNDEFINED}"
-  echo "AWS_STS_GET_CALLER_IDENTITY_STATUS=${AWS_STS_GET_CALLER_IDENTITY_STATUS-UNDEFINED}"
-  echo "APP_NAME=${APP_NAME-UNDEFINED}"
-  echo "SECURITY_GROUP_ID=${SECURITY_GROUP_ID-UNDEFINED}"
-  echo "PEM_KEY_PATH=${PEM_KEY_PATH-UNDEFINED}"
-  echo "EC2_DESCRIBE_INSTANCES_OUTPUT_JSON=${EC2_DESCRIBE_INSTANCES_OUTPUT_JSON-UNDEFINED}"
-  echo "EC2_RUN_INSTANCES_OUTPUT_JSON=${EC2_RUN_INSTANCES_OUTPUT_JSON-UNDEFINED}"
-  echo "INSTANCE_ID=${INSTANCE_ID-UNDEFINED}"
-  echo "PUBLIC_IP=${PUBLIC_IP-UNDEFINED}"
-  echo "USER_DATA_PATH=${USER_DATA_PATH-UNDEFINED}"
-} > "$LOG_FILE"
+source scripts/write-log.sh
 echo -e "${GREEN}Fin Bloque Guardar registro de variables usadas${NC}"
 # Fin Guardar registro de variables usadas
