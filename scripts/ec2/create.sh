@@ -40,7 +40,7 @@ if $CREATE_EC2; then
       --subnet-id "$SUBNET_ID" \
       --iam-instance-profile Name="$INSTANCE_PROFILE_NAME" \
       --user-data file://"$USER_DATA_PATH" \
-      --tag-specifications "ResourceType=instance,Tags=[{Key=Name,Value=$APP_NAME}]" | jq)
+      --tag-specifications "ResourceType=instance,Tags=[{Key=Name,Value=$APP_NAME},{Key=Name2,Value=$APP_NAME}]" | jq)
     # Fin Arrancar nueva instancia EC2
 
     # Obtener el Instance ID
