@@ -1,3 +1,4 @@
+echo "¿Deseas asociar una Elastic IP a la instancia EC2 creada?"
 select ENABLE_ELASTIC_IP in "Sí" "No"; do
   case $ENABLE_ELASTIC_IP in
     "Sí")
@@ -18,5 +19,5 @@ done
 
 # Si CREATE_ELASTIC_IP es verdadero, crear y asociar la Elastic IP
 if [ "$CREATE_ELASTIC_IP" = true ]; then
-  source scripts/elastic-ip/create-and-associate-elastic-ip.sh
+  source scripts/elastic-ip/create-and-associate.sh
 fi
