@@ -5,6 +5,7 @@ echo "📌 Creando Elastic IP en $AWS_REGION..."
 ALLOCATION_ID=$(aws ec2 allocate-address \
   --domain vpc \
   --region "$AWS_REGION" \
+  --tag-specifications "ResourceType=elastic-ip,Tags=[{Key=Name,Value=$APP_NAME},{Key=Name2,Value=$APP_NAME}]" \
   --query 'AllocationId' \
   --output text)
 
