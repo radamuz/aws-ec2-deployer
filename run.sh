@@ -248,6 +248,12 @@ source scripts/ssh/actions.sh
 echo -e "${GREEN}Fin Bloque Enviar imagen de contenedor a la máquina EC2 scripts/ssh/actions.sh${NC}"
 # Fin Enviar imagen de contenedor a la máquina EC2 scripts/ssh/actions.sh
 
+# Preguntar con un select si quieres realizar la instalación de caddy e introducir un nombre de dominio
+echo -e "${CYAN}Inicio Bloque Preguntar con un select si quieres realizar la instalación de caddy e introducir un nombre de dominio${NC}"
+source scripts/caddy/run.sh
+echo -e "${GREEN}Fin Bloque Preguntar con un select si quieres realizar la instalación de caddy e introducir un nombre de dominio${NC}"
+# Fin Preguntar con un select si quieres realizar la instalación de caddy e introducir un nombre de dominio
+
 # Informar al usuario de que puede acceder a la máquina a través del siguiente comando scripts/display-info.sh
 echo -e "${CYAN}Inicio Bloque Informar al usuario de que puede acceder a la máquina a través del siguiente comando scripts/display-info.sh${NC}"
 source scripts/display-info.sh
