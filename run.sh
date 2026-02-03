@@ -224,11 +224,26 @@ aws ec2 wait instance-running --instance-ids "$INSTANCE_ID"
 echo -e "${GREEN}Fin Bloque Esperar a que la instancia esté arrancada${NC}"
 # Fin Esperar a que la instancia esté arrancada
 
+# Inicio Bloque Haz un for i in {1..12} para comprobar con ssh si hay conexion ya
+echo -e "${CYAN}Inicio Bloque Comprobar si hay conexión SSH${NC}"
+PEM_KEY_REALPATH=$(realpath "$PEM_KEY_PATH")
+for i in {1..12}; do
+  if ssh -o ConnectTimeout=5 -i "$PEM_KEY_REALPATH" ubuntu@"$PUBLIC_IP" "exit"; then
+    echo -e "${GREEN}Conexión SSH establecida con éxito en el intento $i${NC}"
+    break
+  else
+    echo -e "${YELLOW}Intento $i: No se pudo establecer la conexión SSH${NC}"
+    sleep 5
+  fi
+done
+echo -e "${GREEN}Fin Bloque Comprobar si hay conexión SSH${NC}"
+# Fin Bloque Comprobar si hay conexión SSH
+
 # Inicio Enviar imagen de contenedor a la máquina EC2
 echo -e "${CYAN}Inicio Bloque Enviar imagen de contenedor a la máquina EC2${NC}"
-PEM_KEY_REALPATH=$(realpath "$PEM_KEY_PATH")
 ssh -i $PEM_KEY_REALPATH ubuntu@$PUBLIC_IP "mkdir -p ~/$APP_NAME"
 scp -i "$PEM_KEY_REALPATH" "tars/$DOCKERFILE_NAME.arm64.tar" ubuntu@"$PUBLIC_IP":~/$APP_NAME
+ssh -t -i $PEM_KEY_REALPATH ubuntu@$PUBLIC_IP "docker load -i ~/$APP_NAME/$DOCKERFILE_NAME.arm64.tar"
 echo -e "${GREEN}Fin Bloque Enviar imagen de contenedor a la máquina EC2${NC}"
 # Fin Enviar imagen de contenedor a la máquina EC2
 
