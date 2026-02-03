@@ -144,11 +144,11 @@
 
 
 
-        <!-- HOMERIA: Configuración adicional necesaria para que WebRatio funcione -->
+        <!-- Configuración adicional necesaria para que WebRatio funcione -->
         <Valve className="org.apache.catalina.valves.RemoteIpValve" 
                protocolHeader="X-Forwarded-Proto" 
                internalProxies="10\.\d+\.\d+\.\d+|192\.168\.\d+\.\d+|169\.254\.\d+\.\d+|127\.\d+\.\d+\.\d+|172\.(1[6-9]|2[0-9]|3[0-1])\.\d+\.\d+" />
-        <!-- Fin de configuración de HOMERIA -->
+        <!-- Fin de configuración de WebRatio-->
 
 
       </Host>
