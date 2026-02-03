@@ -243,7 +243,9 @@ echo -e "${GREEN}Fin Bloque Comprobar si hay conexión SSH${NC}"
 echo -e "${CYAN}Inicio Bloque Enviar imagen de contenedor a la máquina EC2${NC}"
 ssh -i $PEM_KEY_REALPATH ubuntu@$PUBLIC_IP "mkdir -p ~/$APP_NAME"
 scp -i "$PEM_KEY_REALPATH" "tars/$DOCKERFILE_NAME.arm64.tar" ubuntu@"$PUBLIC_IP":~/$APP_NAME
+scp -i "$PEM_KEY_REALPATH" "dockerfiles/$DOCKERFILE_NAME/docker-compose.yml" ubuntu@"$PUBLIC_IP":~/$APP_NAME
 ssh -t -i $PEM_KEY_REALPATH ubuntu@$PUBLIC_IP "docker load -i ~/$APP_NAME/$DOCKERFILE_NAME.arm64.tar"
+ssh -t -i $PEM_KEY_REALPATH ubuntu@$PUBLIC_IP "cd ~/$APP_NAME && docker-compose up -d"
 echo -e "${GREEN}Fin Bloque Enviar imagen de contenedor a la máquina EC2${NC}"
 # Fin Enviar imagen de contenedor a la máquina EC2
 
