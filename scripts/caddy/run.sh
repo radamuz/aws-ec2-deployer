@@ -1,20 +1,33 @@
+
 while true; do
     echo "¿Quieres instalar Caddy?"
     select INSTALL_CADDY in "Sí" "No"; do
         case $INSTALL_CADDY in
             "Sí")
                 echo "Has elegido instalar Caddy."
-
                 while true; do
                     read -p "Introduce el nombre de dominio: " DOMAIN_NAME
 
-                    if [[ -n "$DOMAIN_NAME" ]]; then
-                        echo "Dominio introducido: $DOMAIN_NAME"
-                        export DOMAIN_NAME
-                        break 2   # sale del select y del while principal
-                    else
-                        echo "El dominio no puede estar vacío."
-                    fi
+                    echo
+                    echo -e "${YELLOW}Has introducido el nombre:${NC} ${DOMAIN_NAME}"
+                    echo -e "${YELLOW}¿Es correcto?${NC}"
+
+                    select yn in "Sí" "No"; do
+                        case $yn in
+                            "Sí")
+                                echo "Continuamos..."
+                                export DOMAIN_NAME
+                                break 3   # sale del select y del while
+                                ;;
+                            "No")
+                                echo "Vale, volvemos a introducir el nombre."
+                                break     # sale solo del select
+                                ;;
+                            *)
+                                echo "Opción inválida, selecciona 1 o 2."
+                                ;;
+                        esac
+                    done
                 done
                 ;;
             "No")
@@ -29,6 +42,7 @@ while true; do
     done
 done
 
-if [[ -n "$DOMAIN_NAME" ]]; then
+# Si INSTALL_CADDY
+if [[ "$INSTALL_CADDY" == "Sí" ]]; then
     source scripts/caddy/installation.sh
 fi
