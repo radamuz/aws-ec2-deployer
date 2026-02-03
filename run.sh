@@ -224,62 +224,29 @@ aws ec2 wait instance-running --instance-ids "$INSTANCE_ID"
 echo -e "${GREEN}Fin Bloque Esperar a que la instancia esté arrancada${NC}"
 # Fin Esperar a que la instancia esté arrancada
 
-# Inicio Bloque Haz un for i in {1..12} para comprobar con ssh si hay conexion ya
-echo -e "${CYAN}Inicio Bloque Comprobar si hay conexión SSH${NC}"
-PEM_KEY_REALPATH=$(realpath "$PEM_KEY_PATH")
-for i in {1..12}; do
-  if ssh -o ConnectTimeout=5 -i "$PEM_KEY_REALPATH" ubuntu@"$PUBLIC_IP" "exit"; then
-    echo -e "${GREEN}Conexión SSH establecida con éxito en el intento $i${NC}"
-    break
-  else
-    echo -e "${YELLOW}Intento $i: No se pudo establecer la conexión SSH${NC}"
-    sleep 5
-  fi
-done
-echo -e "${GREEN}Fin Bloque Comprobar si hay conexión SSH${NC}"
-# Fin Bloque Comprobar si hay conexión SSH
+# Inicio Bloque Haz un for i in {1..12} para comprobar con ssh si hay conexion ya scripts/ssh/try.sh
+echo -e "${CYAN}Inicio Bloque Comprobar si hay conexión SSH scripts/ssh/try.sh${NC}"
+source scripts/ssh/try.sh
+echo -e "${GREEN}Fin Bloque Comprobar si hay conexión SSH scripts/ssh/try.sh${NC}"
+# Fin Bloque Comprobar si hay conexión SSH scripts/ssh/try.sh
 
 # Inicio Bloque az un for i in {1..12} para comprobar con ssh si ya se ha instalado docker
 echo -e "${CYAN}Inicio Bloque Comprobar si Docker está instalado${NC}"
-for i in {1..12}; do
-  if ssh -o ConnectTimeout=5 -i "$PEM_KEY_REALPATH" ubuntu@"$PUBLIC_IP" "docker --version"; then
-    echo -e "${GREEN}Docker está instalado en el intento $i${NC}"
-    break
-  else
-    echo -e "${YELLOW}Intento $i: Docker no está instalado${NC}"
-    sleep 10
-  fi
-done
+source scripts/ssh/try-docker.sh
+echo -e "${GREEN}Fin Bloque Comprobar si Docker está instalado${NC}"
+# Fin Bloque Comprobar si Docker está instalado
 
-# Inicio Enviar imagen de contenedor a la máquina EC2
-echo -e "${CYAN}Inicio Bloque Enviar imagen de contenedor a la máquina EC2${NC}"
-ssh -i $PEM_KEY_REALPATH ubuntu@$PUBLIC_IP "mkdir -p ~/$APP_NAME"
-scp -i "$PEM_KEY_REALPATH" "tars/$DOCKERFILE_NAME.arm64.tar" ubuntu@"$PUBLIC_IP":~/$APP_NAME
-scp -i "$PEM_KEY_REALPATH" "dockerfiles/$DOCKERFILE_NAME/docker-compose.yml" ubuntu@"$PUBLIC_IP":~/$APP_NAME
-ssh -t -i $PEM_KEY_REALPATH ubuntu@$PUBLIC_IP "docker load -i ~/$APP_NAME/$DOCKERFILE_NAME.arm64.tar"
-ssh -t -i $PEM_KEY_REALPATH ubuntu@$PUBLIC_IP "cd ~/$APP_NAME && docker compose up -d"
-echo -e "${GREEN}Fin Bloque Enviar imagen de contenedor a la máquina EC2${NC}"
-# Fin Enviar imagen de contenedor a la máquina EC2
+# Inicio Enviar imagen de contenedor a la máquina EC2 scripts/ssh/actions.sh
+echo -e "${CYAN}Inicio Bloque Enviar imagen de contenedor a la máquina EC2 scripts/ssh/actions.sh${NC}"
+source scripts/ssh/actions.sh
+echo -e "${GREEN}Fin Bloque Enviar imagen de contenedor a la máquina EC2 scripts/ssh/actions.sh${NC}"
+# Fin Enviar imagen de contenedor a la máquina EC2 scripts/ssh/actions.sh
 
-# Informar al usuario de que puede acceder a la máquina a través del siguiente comando
-echo -e "${CYAN}Inicio Bloque Informar al usuario de que puede acceder a la máquina a través del siguiente comando${NC}"
-echo -e "Puedes acceder a la máquina a través del siguiente comando:"
-echo "chmod 600 $PEM_KEY_REALPATH"
-echo "------------------CONECTAR-----------------"
-echo "ssh -i $PEM_KEY_REALPATH ubuntu@$PUBLIC_IP"
-echo "-------------------------------------------"
-echo "------------------DEGUG--------------------"
-echo "ssh -i $PEM_KEY_REALPATH ubuntu@$PUBLIC_IP \"cat /var/log/cloud-init-output.log\""
-echo "ssh -i $PEM_KEY_REALPATH ubuntu@$PUBLIC_IP \"cat /var/log/cloud-init.log\""
-echo "-------------------------------------------"
-echo -e "${GREEN}Fin Bloque Informar al usuario de que puede acceder a la máquina a través del siguiente comando${NC}"
-# Fin Informar al usuario de que puede acceder a la máquina a través del siguiente comando
-
-# Asegurarse de que existe la carpeta logs
-echo -e "${CYAN}Inicio Bloque Asegurarse de que existe la carpeta logs${NC}"
-mkdir -p logs
-echo -e "${GREEN}Fin Bloque Asegurarse de que existe la carpeta logs${NC}"
-# Fin Asegurarse de que existe la carpeta logs
+# Informar al usuario de que puede acceder a la máquina a través del siguiente comando scripts/display-info.sh
+echo -e "${CYAN}Inicio Bloque Informar al usuario de que puede acceder a la máquina a través del siguiente comando scripts/display-info.sh${NC}"
+source scripts/display-info.sh
+echo -e "${GREEN}Fin Bloque Informar al usuario de que puede acceder a la máquina a través del siguiente comando scripts/display-info.sh${NC}"
+# Fin Informar al usuario de que puede acceder a la máquina a través del siguiente comando scripts/display-info.sh
 
 # Guardar registro de variables usadas scripts/write-log.sh
 echo -e "${CYAN}Inicio Bloque Guardar registro de variables usadas scripts/write-log.sh${NC}"

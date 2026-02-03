@@ -1,3 +1,4 @@
+mkdir -p logs
 LOG_FILE="logs/$(date '+%Y-%m-%d_%H-%M-%S').log"
 {
   echo "LOG_FILE=$LOG_FILE"
