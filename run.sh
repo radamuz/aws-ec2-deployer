@@ -185,7 +185,7 @@ echo -e "${GREEN}Fin Bloque Obtener el AMI ID${NC}"
 
 # Comprobar si existe la EC2
 echo -e "${CYAN}Inicio Bloque Comprobar si existe la EC2${NC}"
-source scripts/check-ec2-name.sh
+source scripts/ec2/check-name.sh
 echo -e "${GREEN}Fin Bloque Comprobar si existe la EC2${NC}"
 # Fin comprobar si existe la EC2
 
