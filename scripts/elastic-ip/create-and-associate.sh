@@ -1,5 +1,4 @@
 #!/usr/bin/env bash
-set -e
 
 echo "📌 Creando Elastic IP en $AWS_REGION..."
 

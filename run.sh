@@ -218,6 +218,12 @@ source scripts/ec2/create.sh
 echo -e "${GREEN}Fin Bloque Si la EC2 no existe entonces creala scripts/ec2/create.sh${NC}"
 # Fin Si la EC2 no existe entonces creala scripts/ec2/create.sh
 
+# Con un select option di si o no si quieres asociarle una elastic ip scripts/elastic-ip/run.sh
+echo -e "${CYAN}Inicio Bloque Con un select option di si o no si quieres asociarle una elastic ip scripts/elastic-ip/run.sh${NC}"
+source scripts/elastic-ip/run.sh
+echo -e "${GREEN}Fin Bloque Con un select option di si o no si quieres asociarle una elastic ip scripts/elastic-ip/run.sh${NC}"
+# Fin Con un select option di si o no si quieres asociarle una elastic ip scripts/elastic-ip/run.sh
+
 # Esperar a que la instancia esté arrancada
 echo -e "${CYAN}Inicio Bloque Esperar a que la instancia esté arrancada${NC}"
 aws ec2 wait instance-running --instance-ids "$INSTANCE_ID"
