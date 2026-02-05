@@ -45,5 +45,28 @@ done
 
 # Ejecutar solo si toca
 if [[ "$INSTALL_CADDY" == "Sí" ]]; then
-    source scripts/caddy/installation.sh
+    while true; do
+        echo
+        echo -e "${YELLOW}Asegúrate de que el registro DNS${NC} ${DOMAIN_NAME} ${YELLOW}apunta a la IP de tu servidor${NC} ${PUBLIC_IP}"
+        echo -e "${YELLOW}¿Ya lo tienes?${NC}"
+        select yn in "Sí" "No"; do
+            case $yn in
+                "Sí")
+                    echo "Continuamos..."
+                    INSTALL_CADDY_OK=true
+                    break 2   # sale del select yn y del while del dominio
+                    ;;
+                "No")
+                    echo "Vale, esperamos."
+                    break     # sale solo del select yn
+                    ;;
+                *)
+                    echo "Opción inválida, selecciona 1 o 2."
+                    ;;
+            esac
+        done
+    done
+fi
+
+if [[ "$INSTALL_CADDY_OK" == "true" ]]; then
 fi
