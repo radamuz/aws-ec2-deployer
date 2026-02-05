@@ -69,4 +69,7 @@ if [[ "$INSTALL_CADDY" == "Sí" ]]; then
 fi
 
 if [[ "$INSTALL_CADDY_OK" == "true" ]]; then
+    ssh -t -i $PEM_KEY_REALPATH ubuntu@$PUBLIC_IP "mkdir -p ~/$APP_NAME/caddy"
+    scp -i "$PEM_KEY_REALPATH" "scripts/caddy/installation.sh" ubuntu@"$PUBLIC_IP":~/$APP_NAME/caddy/
+    ssh -t -i $PEM_KEY_REALPATH ubuntu@$PUBLIC_IP "bash ~/$APP_NAME/caddy/installation.sh $DOMAIN_NAME"
 fi

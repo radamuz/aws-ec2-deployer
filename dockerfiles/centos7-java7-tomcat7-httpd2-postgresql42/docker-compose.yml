@@ -2,7 +2,7 @@ services:
   centos7-java7-tomcat7-httpd2-postgresql42:
     image: centos7-java7-tomcat7-httpd2-postgresql42:latest
     ports:
-      - "80:80"
+      - "8080:80"
     volumes:
       - ./test:/test
     environment:
