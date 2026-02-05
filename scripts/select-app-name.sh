@@ -1,7 +1,7 @@
 while true; do
     read -p "Nombre del aplicativo [aws-ec2-deployer]: " APP_NAME
     APP_NAME=${APP_NAME:-aws-ec2-deployer}
-    APP_NAME="${APP_NAME}-aedd"
+    APP_NAME="${APP_NAME}-aed"
 
     echo
     echo -e "${YELLOW}Has introducido el nombre:${NC} ${APP_NAME}"
