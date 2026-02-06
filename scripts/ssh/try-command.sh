@@ -1,4 +1,17 @@
-
+# Inicio Bloque Elegir el comando a probar con ssh
+echo -e "${CYAN}Inicio Bloque Elegir el comando a probar con ssh${NC}"
+echo "Elige el comando a probar con ssh:"
+select SSH_TRY_COMMAND in $(cat config/ssh-try-commands.txt); do
+  if [[ -n "$SSH_TRY_COMMAND" ]]; then
+    echo "Has elegido el comando a probar con ssh: $SSH_TRY_COMMAND"
+    export SSH_TRY_COMMAND
+    break
+  else
+    echo "Opción inválida, prueba otra vez."
+  fi
+done
+echo -e "${GREEN}Fin Bloque Elegir el comando a probar con ssh${NC}"
+# Fin Bloque Elegir el comando a probar con ssh
 
 
 for i in {1..12}; do
