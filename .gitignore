@@ -1,3 +1,5 @@
 tars
 logs
 keypairs
+curl_debug.log
+response.xml
