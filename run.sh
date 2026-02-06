@@ -228,23 +228,11 @@ aws ec2 wait instance-running --instance-ids "$INSTANCE_ID"
 echo -e "${GREEN}Fin Bloque Esperar a que la instancia esté arrancada${NC}"
 # Fin Esperar a que la instancia esté arrancada
 
-# Inicio Bloque Haz un for i in {1..12} para comprobar con ssh si hay conexion ya scripts/ssh/try-basic-connection.sh
-echo -e "${CYAN}Inicio Bloque Comprobar si hay conexión SSH scripts/ssh/try-basic-connection.sh${NC}"
-source scripts/ssh/try-basic-connection.sh
-echo -e "${GREEN}Fin Bloque Comprobar si hay conexión SSH scripts/ssh/try-basic-connection.sh${NC}"
-# Fin Bloque Comprobar si hay conexión SSH scripts/ssh/try-basic-connection.sh
-
-# Inicio Bloque az un for i in {1..12} para comprobar con ssh si ya se ha instalado el aplicativo
-echo -e "${CYAN}Inicio Bloque Comprobar con ssh si ya se ha instalado el aplicativo${NC}"
-source scripts/ssh/try-command.sh
-echo -e "${GREEN}Fin Bloque Comprobar con ssh si ya se ha instalado el aplicativo${NC}"
-# Fin Bloque Comprobar con ssh si ya se ha instalado el aplicativo
-
-# Inicio Enviar imagen de contenedor a la máquina EC2 scripts/ssh/actions.sh
-echo -e "${CYAN}Inicio Bloque Enviar imagen de contenedor a la máquina EC2 scripts/ssh/actions.sh${NC}"
-source scripts/ssh/actions.sh
-echo -e "${GREEN}Fin Bloque Enviar imagen de contenedor a la máquina EC2 scripts/ssh/actions.sh${NC}"
-# Fin Enviar imagen de contenedor a la máquina EC2 scripts/ssh/actions.sh
+# Inicio Bloque arrancar el proceso de SSH
+echo -e "${CYAN}Inicio Bloque arrancar el proceso de SSH${NC}"
+source scripts/ssh/run.sh
+echo -e "${GREEN}Fin Bloque arrancar el proceso de SSH${NC}"
+# Fin Bloque arrancar el proceso de SSH
 
 # Preguntar con un select si quieres realizar la instalación de caddy e introducir un nombre de dominio
 echo -e "${CYAN}Inicio Bloque Preguntar con un select si quieres realizar la instalación de caddy e introducir un nombre de dominio${NC}"
