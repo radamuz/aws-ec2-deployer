@@ -36,6 +36,28 @@ else
   echo "✔ Rol ya existe"
 fi
 
+echo "▶ Verificando y asociando policies gestionadas por AWS al rol..."
+AWS_MANAGED_POLICIES=(
+  "arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore"
+  "arn:aws:iam::aws:policy/AmazonSSMPatchAssociation"
+)
+
+ATTACHED_POLICY_ARNS="$(aws iam list-attached-role-policies \
+  --role-name "$ROLE_NAME" \
+  --query 'AttachedPolicies[].PolicyArn' \
+  --output text)"
+
+for POLICY_ARN_TO_ATTACH in "${AWS_MANAGED_POLICIES[@]}"; do
+  if echo "$ATTACHED_POLICY_ARNS" | tr '\t' '\n' | grep -Fxq "$POLICY_ARN_TO_ATTACH"; then
+    echo "✔ Ya asociada: $POLICY_ARN_TO_ATTACH"
+  else
+    echo "▶ Asociando: $POLICY_ARN_TO_ATTACH"
+    aws iam attach-role-policy \
+      --role-name "$ROLE_NAME" \
+      --policy-arn "$POLICY_ARN_TO_ATTACH"
+  fi
+done
+
 echo "▶ Asociando policy al rol..."
 aws iam attach-role-policy \
   --role-name "$ROLE_NAME" \
