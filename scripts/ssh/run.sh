@@ -10,8 +10,10 @@ source scripts/ssh/try-command.sh
 echo -e "${GREEN}Fin Bloque Comprobar con ssh si ya se ha instalado el aplicativo${NC}"
 # Fin Bloque Comprobar con ssh si ya se ha instalado el aplicativo
 
-# Inicio Enviar imagen de contenedor a la máquina EC2 scripts/ssh/actions.sh
-echo -e "${CYAN}Inicio Bloque Enviar imagen de contenedor a la máquina EC2 scripts/ssh/actions.sh${NC}"
-source scripts/ssh/actions.sh
-echo -e "${GREEN}Fin Bloque Enviar imagen de contenedor a la máquina EC2 scripts/ssh/actions.sh${NC}"
-# Fin Enviar imagen de contenedor a la máquina EC2 scripts/ssh/actions.sh
+# Inicio Enviar imagen de contenedor a la máquina EC2 scripts/ssh/docker-actions.sh
+if [[ "$DOCKERFILE_PATH" != "dockerfiles/none" ]]; then
+  echo -e "${CYAN}Inicio Bloque Enviar imagen de contenedor a la máquina EC2 scripts/ssh/docker-actions.sh${NC}"
+  source scripts/ssh/docker-actions.sh
+  echo -e "${GREEN}Fin Bloque Enviar imagen de contenedor a la máquina EC2 scripts/ssh/docker-actions.sh${NC}"
+fi
+# Fin Enviar imagen de contenedor a la máquina EC2 scripts/ssh/docker-actions.sh

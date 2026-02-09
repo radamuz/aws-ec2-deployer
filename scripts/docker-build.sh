@@ -54,7 +54,7 @@ fi
 # Fin Construir la imagen y exportar a tar AMD64
 
 # Construir la imagen y exportar a tar ARM64
-BUILD_ARM64_IMAGE=false
+BUILD_ARM64_IMAGE=true
 if $BUILD_ARM64_IMAGE; then
 docker buildx build --platform linux/arm64 \
     --output "type=docker,dest=tars/$DOCKERFILE_NAME.arm64.tar" \

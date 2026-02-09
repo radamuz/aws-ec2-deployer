@@ -18,7 +18,6 @@ export AWS_PAGER=""
 echo -e "${GREEN}Fin Bloque Que aws cli no use less${NC}"
 # Fin Que aws cli no use less
 
-
 # Elegir un Dockerfile
 echo -e "${CYAN}Inicio Bloque Elegir un Dockerfile${NC}"
 DOCKERFILES=(dockerfiles/*)
@@ -37,7 +36,7 @@ echo -e "${GREEN}Fin Bloque Elegir un Dockerfile${NC}"
 # Arrancar proceso de construcción de imágenes Docker
 echo -e "${CYAN}Inicio Bloque Arrancar proceso de construcción de imágenes Docker${NC}"
 RUN_DOCKER_BUILD=true
-if $RUN_DOCKER_BUILD; then
+if [[ "$RUN_DOCKER_BUILD" == "true" && "$DOCKERFILE_PATH" != "dockerfiles/none" ]]; then
   source scripts/docker-build.sh "$DOCKERFILE_PATH"
 fi
 echo -e "${GREEN}Fin Bloque Arrancar proceso de construcción de imágenes Docker${NC}"
