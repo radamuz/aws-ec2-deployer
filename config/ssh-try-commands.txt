@@ -1,1 +1,2 @@
 docker --version
+psql --version
