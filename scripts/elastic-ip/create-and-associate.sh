@@ -11,6 +11,23 @@ ALLOCATION_ID=$(aws ec2 allocate-address \
 
 echo "✅ Elastic IP creada. AllocationId: $ALLOCATION_ID"
 
+# Asegurate que la instancia $INSTANCE_ID esté en un estado "running" y si no lo está haz try hasta que esté listo para asociar la IP
+INSTANCE_STATE=$(aws ec2 describe-instances \
+  --instance-ids "$INSTANCE_ID" \
+  --region "$AWS_REGION" \
+  --query 'Reservations[0].Instances[0].State.Name' \
+  --output text)
+
+while [ "$INSTANCE_STATE" != "running" ]; do
+  echo "🔄 La instancia $INSTANCE_ID no está en estado 'running', esperando..."
+  sleep 5
+  INSTANCE_STATE=$(aws ec2 describe-instances \
+    --instance-ids "$INSTANCE_ID" \
+    --region "$AWS_REGION" \
+    --query 'Reservations[0].Instances[0].State.Name' \
+    --output text)
+done
+
 echo "🔗 Asociando Elastic IP a la instancia $INSTANCE_ID..."
 
 ASSOCIATION_ID=$(aws ec2 associate-address \

@@ -34,6 +34,7 @@ select INSTALL_CADDY in "Sí" "No"; do
             ;;
         "No")
             echo "Has elegido NO instalar Caddy."
+            INSTALL_CADDY_OK=false
             unset DOMAIN_NAME
             break   # ⬅️ salimos del select principal
             ;;
