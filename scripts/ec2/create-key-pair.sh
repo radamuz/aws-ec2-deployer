@@ -7,11 +7,6 @@ if $CREATE_KEY_PAIR; then
       --query "KeyPairs[?KeyName=='$PEM_KEY_NAME']" \
       --output text | grep -q "$PEM_KEY_NAME"; then
     echo "✅ El key pair existe"
-    # Sobrescribe el contenido del PEM_KEY local
-    aws ec2 describe-key-pairs \
-      --key-name "$PEM_KEY_NAME" \
-      --query 'KeyMaterial' \
-      --output text > "$PEM_KEY_PATH"
   else
     echo "❌ El key pair NO existe"
     aws ec2 create-key-pair \

@@ -103,7 +103,8 @@ if ! aws secretsmanager describe-secret --secret-id "$PEM_KEY_PATH" >/dev/null 2
   echo "❌ El secreto NO existe, creando..."
   aws secretsmanager create-secret --name "$PEM_KEY_PATH" --secret-string file://"$PEM_KEY_PATH" | jq
 else
-  echo "✅ El secreto ya existe"
+  echo "✅ El secreto ya existe, sobreescribiendo el PEM_KEY_PATH local..."
+  aws secretsmanager get-secret-value --secret-id "$PEM_KEY_PATH" --query 'SecretString' --output text > "$PEM_KEY_PATH"
 fi
 echo -e "${GREEN}Fin Bloque Hacer cat \$PEM_KEY_PATH y subirlo al secret manager si no existe${NC}"
 # Fin Hacer cat $PEM_KEY_PATH y subirlo al secret manager si no existe
