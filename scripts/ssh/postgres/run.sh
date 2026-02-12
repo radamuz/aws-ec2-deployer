@@ -3,7 +3,7 @@ if [[ "$USER_DATA_FILE" == "postgres.arm64.sh" ]]; then
     select SET_POSTGRES_PASSWORD in "Sí" "No"; do
         echo "Has elegido $SET_POSTGRES_PASSWORD."
     done
-done
+fi
 
 if [[ "$SET_POSTGRES_PASSWORD" == "Sí" ]]; then
     ssh -i $PEM_KEY_REALPATH ubuntu@$PUBLIC_IP "mkdir -p ~/$APP_NAME"
