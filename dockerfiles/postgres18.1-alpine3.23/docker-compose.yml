@@ -1,0 +1,13 @@
+services:
+  postgres18.1-alpine3.23:
+    image: postgres18.1-alpine3.23:latest
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    environment:
+      TEST: test
+    restart: always
+
+volumes:
+  postgres_data:
