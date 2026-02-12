@@ -17,3 +17,9 @@ if [[ "$DOCKERFILE_PATH" != "dockerfiles/none" ]]; then
   echo -e "${GREEN}Fin Bloque Enviar imagen de contenedor a la máquina EC2 scripts/ssh/docker-actions.sh${NC}"
 fi
 # Fin Enviar imagen de contenedor a la máquina EC2 scripts/ssh/docker-actions.sh
+
+# Inicio Bloque Postgres scripts/ssh/postgres/run.sh
+echo -e "${CYAN}Inicio Bloque Postgres scripts/ssh/postgres/run.sh${NC}"
+source scripts/ssh/postgres/run.sh
+echo -e "${GREEN}Fin Bloque Postgres scripts/ssh/postgres/run.sh${NC}"
+# Fin Bloque Postgres scripts/ssh/postgres/run.sh
