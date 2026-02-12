@@ -4,6 +4,8 @@ if [[ "$USER_DATA_FILE" == "postgres.arm64.sh" ]]; then
         echo "Has elegido $SET_POSTGRES_PASSWORD."
         break
     done
+else
+    SET_POSTGRES_PASSWORD="No"
 fi
 
 if [[ "$SET_POSTGRES_PASSWORD" == "Sí" ]]; then

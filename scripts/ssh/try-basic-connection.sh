@@ -1,4 +1,4 @@
-for i in {1..12}; do
+for i in {1..36}; do
   if ssh -o ConnectTimeout=5 -i "$PEM_KEY_REALPATH" ubuntu@"$PUBLIC_IP" "exit"; then
     echo -e "${GREEN}Conexión SSH establecida con éxito en el intento $i${NC}"
     break

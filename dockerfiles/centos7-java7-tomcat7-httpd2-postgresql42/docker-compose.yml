@@ -1,6 +1,7 @@
 services:
   centos7-java7-tomcat7-httpd2-postgresql42:
     image: centos7-java7-tomcat7-httpd2-postgresql42:latest
+    container_name: centos7-java7-tomcat7-httpd2-postgresql42
     ports:
       - "8080:80"
     volumes:

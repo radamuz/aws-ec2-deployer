@@ -15,7 +15,7 @@ echo -e "${GREEN}Fin Bloque Elegir el comando a probar con ssh${NC}"
 # Fin Bloque Elegir el comando a probar con ssh
 
 
-for i in {1..12}; do
+for i in {1..36}; do
   if ssh -o ConnectTimeout=5 -i "$PEM_KEY_REALPATH" ubuntu@"$PUBLIC_IP" "${SSH_TRY_COMMAND}"; then
     echo -e "${GREEN}El comando ${SSH_TRY_COMMAND} se ejecutó con éxito en el intento $i${NC}"
     break
