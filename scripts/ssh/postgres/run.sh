@@ -2,6 +2,7 @@ if [[ "$USER_DATA_FILE" == "postgres.arm64.sh" ]]; then
     echo "¿Quieres establecer una contraseña al usuario postgres?"
     select SET_POSTGRES_PASSWORD in "Sí" "No"; do
         echo "Has elegido $SET_POSTGRES_PASSWORD."
+        break
     done
 fi
 
