@@ -6,11 +6,22 @@ while true; do
     read -s -p "Confirma la contraseña para el usuario postgres: " POSTGRES_PASSWORD_CONFIRM
     echo
 
+    if [[ -z "$POSTGRES_PASSWORD" ]]; then
+        echo "❌ La contraseña no puede estar vacía."
+        continue
+    fi
+
     if [[ "$POSTGRES_PASSWORD" == "$POSTGRES_PASSWORD_CONFIRM" ]]; then
         echo "Contraseña confirmada. Continuamos..."
-        export POSTGRES_PASSWORD
         break
     else
         echo "Las contraseñas no coinciden. Por favor, inténtalo de nuevo."
     fi
 done
+
+# Ejecutar ALTER USER de forma segura
+sudo -u postgres POSTGRES_PASSWORD="$POSTGRES_PASSWORD" psql <<'EOF'
+ALTER USER postgres PASSWORD :'POSTGRES_PASSWORD';
+EOF
+
+echo "✅ Contraseña del usuario postgres establecida correctamente."
