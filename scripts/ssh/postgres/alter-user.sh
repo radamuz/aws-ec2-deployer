@@ -20,7 +20,7 @@ while true; do
 done
 
 # Ejecutar ALTER USER de forma segura
-sudo -u postgres POSTGRES_PASSWORD="$POSTGRES_PASSWORD" psql <<'EOF'
+sudo -u postgres psql -v POSTGRES_PASSWORD="$POSTGRES_PASSWORD" <<'EOF'
 ALTER USER postgres PASSWORD :'POSTGRES_PASSWORD';
 EOF
 
