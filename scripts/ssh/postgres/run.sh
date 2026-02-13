@@ -15,3 +15,17 @@ if [[ "$SET_POSTGRES_PASSWORD" == "Sí" ]]; then
     ssh -t -i $PEM_KEY_REALPATH ubuntu@$PUBLIC_IP "bash ~/$APP_NAME/alter-user.sh"
     ssh -t -i $PEM_KEY_REALPATH ubuntu@$PUBLIC_IP "bash ~/$APP_NAME/open-listener-and-hba.sh"
 fi
+
+if [[ "$DOCKERFILE_PATH" == *postgres* ]]; then
+    echo "¿Quieres establecer una contraseña al usuario postgres?"
+    select SET_POSTGRES_PASSWORD_DOCKER in "Sí" "No"; do
+        echo "Has elegido $SET_POSTGRES_PASSWORD_DOCKER."
+        break
+    done
+else
+    SET_POSTGRES_PASSWORD_DOCKER="No"
+fi
+
+if [[ "$SET_POSTGRES_PASSWORD_DOCKER" == "Sí" ]]; then
+    source scripts/ssh/postgres/alter-user-docker.sh
+fi

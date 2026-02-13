@@ -1,5 +1,5 @@
 echo -e "Puedes acceder a la máquina a través del siguiente comando:"
-echo "------------------DEGUG--------------------"
+echo "------------DEGUG CLOUD INIT----------------"
 echo "ssh -i $PEM_KEY_REALPATH ubuntu@$PUBLIC_IP \"cat /var/log/cloud-init-output.log\""
 echo "ssh -i $PEM_KEY_REALPATH ubuntu@$PUBLIC_IP \"cat /var/log/cloud-init.log\""
 echo "aws ssm start-session --profile $AWS_PROFILE --region $AWS_REGION --target $INSTANCE_ID --document-name \"AWS-StartInteractiveCommand\" --parameters 'commands=[\"cat /var/log/cloud-init-output.log\"]'"
