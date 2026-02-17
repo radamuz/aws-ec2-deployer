@@ -93,6 +93,10 @@ INSERT INTO infranettone.projects_clients (project_id, client_id)
 VALUES
     ('project_test_1', 'client_test_1'),
     ('project_test_1', 'client_test_2'),
+    ('project_test_1', 'client_test_3'),
+    ('project_test_1', 'client_test_4'),
+    ('project_test_2', 'client_test_1'),
+    ('project_test_2', 'client_test_2'),
     ('project_test_2', 'client_test_3'),
     ('project_test_2', 'client_test_4')
 ON CONFLICT (project_id, client_id) DO NOTHING;
