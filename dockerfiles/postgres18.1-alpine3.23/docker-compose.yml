@@ -2,14 +2,15 @@ services:
   postgres18.1-alpine3.23:
     image: postgres18.1-alpine3.23:latest
     container_name: postgres18.1-alpine3.23
+    command:
+      - "postgres"
+      - "-c"
+      - "log_statement=all"
     ports:
       - "5432:5432"
     volumes:
-      - postgres_data:/var/lib/postgresql/data
+      - ./postgres_data:/var/lib/postgresql/data
     environment:
       TEST: test
       POSTGRES_PASSWORD: changeme
     restart: always
-
-volumes:
-  postgres_data:
