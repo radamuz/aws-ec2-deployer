@@ -30,16 +30,16 @@ docker run --rm \
   alpine/psql:latest \
   -h "$PUBLIC_IP" \
   -U postgres \
+  -v ON_ERROR_STOP=1 \
   -v INFRANETTONE_PASSWORD="${INFRANETTONE_PASSWORD}" <<'EOF'
 
-DO $$
-BEGIN
-  IF NOT EXISTS (SELECT 1 FROM pg_roles WHERE rolname = 'infranettone') THEN
-    CREATE USER infranettone WITH PASSWORD :'INFRANETTONE_PASSWORD';
-  ELSE
-    ALTER USER infranettone WITH PASSWORD :'INFRANETTONE_PASSWORD';
-  END IF;
-END $$;
+SELECT format('CREATE USER %I WITH PASSWORD %L', 'infranettone', :'INFRANETTONE_PASSWORD')
+WHERE NOT EXISTS (SELECT 1 FROM pg_roles WHERE rolname = 'infranettone')
+\gexec
+
+SELECT format('ALTER USER %I WITH PASSWORD %L', 'infranettone', :'INFRANETTONE_PASSWORD')
+WHERE EXISTS (SELECT 1 FROM pg_roles WHERE rolname = 'infranettone')
+\gexec
 
 SELECT format('CREATE DATABASE %I OWNER %I', 'infranettone', 'infranettone')
 WHERE NOT EXISTS (SELECT 1 FROM pg_database WHERE datname = 'infranettone')
