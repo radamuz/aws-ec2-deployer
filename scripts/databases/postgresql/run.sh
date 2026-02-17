@@ -54,6 +54,48 @@ WHERE NOT EXISTS (SELECT 1 FROM pg_namespace WHERE nspname = 'infranettone')
 \gexec
 
 GRANT ALL ON SCHEMA infranettone TO infranettone;
+
+CREATE TABLE IF NOT EXISTS infranettone.projects (
+    project_id VARCHAR(255) PRIMARY KEY
+);
+
+CREATE TABLE IF NOT EXISTS infranettone.clients (
+    client_id VARCHAR(255) PRIMARY KEY
+);
+
+CREATE TABLE IF NOT EXISTS infranettone.projects_clients (
+    project_id VARCHAR(255) NOT NULL,
+    client_id VARCHAR(255) NOT NULL,
+    PRIMARY KEY (project_id, client_id),
+    CONSTRAINT fk_projects_clients_project
+        FOREIGN KEY (project_id)
+        REFERENCES infranettone.projects (project_id),
+    CONSTRAINT fk_projects_clients_client
+        FOREIGN KEY (client_id)
+        REFERENCES infranettone.clients (client_id)
+);
+
+INSERT INTO infranettone.projects (project_id)
+VALUES
+    ('project_test_1'),
+    ('project_test_2')
+ON CONFLICT (project_id) DO NOTHING;
+
+INSERT INTO infranettone.clients (client_id)
+VALUES
+    ('client_test_1'),
+    ('client_test_2'),
+    ('client_test_3'),
+    ('client_test_4')
+ON CONFLICT (client_id) DO NOTHING;
+
+INSERT INTO infranettone.projects_clients (project_id, client_id)
+VALUES
+    ('project_test_1', 'client_test_1'),
+    ('project_test_1', 'client_test_2'),
+    ('project_test_2', 'client_test_3'),
+    ('project_test_2', 'client_test_4')
+ON CONFLICT (project_id, client_id) DO NOTHING;
 EOF
 echo -e "${CYAN}End of block Create and configure PostgreSQL database.${NC}"
 # End of block Create and configure PostgreSQL database.
