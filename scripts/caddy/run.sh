@@ -48,7 +48,7 @@ done
 if [[ "$INSTALL_CADDY" == "Sí" ]]; then
     while true; do
         echo
-        echo -e "${YELLOW}Asegúrate de que el registro DNS${NC} ${DOMAIN_NAME} ${YELLOW}apunta a la IP de tu servidor${NC} ${PUBLIC_IP}"
+        echo -e "${YELLOW}Asegúrate de que el registro DNS${NC} ${DOMAIN_NAME} ${YELLOW}apunta a la IP de tu servidor${NC} ${PUBLIC_IP} ${YELLOW}y ya se ha propagado.${NC}"
         echo -e "${YELLOW}¿Ya lo tienes?${NC}"
         select yn in "Sí" "No"; do
             case $yn in
