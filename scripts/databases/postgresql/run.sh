@@ -54,6 +54,12 @@ WHERE NOT EXISTS (SELECT 1 FROM pg_namespace WHERE nspname = 'infranettone')
 \gexec
 
 GRANT ALL ON SCHEMA infranettone TO infranettone;
+GRANT SELECT, INSERT, UPDATE, DELETE ON ALL TABLES IN SCHEMA infranettone TO infranettone;
+GRANT USAGE, SELECT, UPDATE ON ALL SEQUENCES IN SCHEMA infranettone TO infranettone;
+ALTER DEFAULT PRIVILEGES IN SCHEMA infranettone
+GRANT SELECT, INSERT, UPDATE, DELETE ON TABLES TO infranettone;
+ALTER DEFAULT PRIVILEGES IN SCHEMA infranettone
+GRANT USAGE, SELECT, UPDATE ON SEQUENCES TO infranettone;
 
 CREATE TABLE IF NOT EXISTS infranettone.projects (
     project_id VARCHAR(255) PRIMARY KEY
@@ -100,6 +106,9 @@ VALUES
     ('project_test_2', 'client_test_3'),
     ('project_test_2', 'client_test_4')
 ON CONFLICT (project_id, client_id) DO NOTHING;
+
+GRANT SELECT, INSERT, UPDATE, DELETE ON ALL TABLES IN SCHEMA infranettone TO infranettone;
+GRANT USAGE, SELECT, UPDATE ON ALL SEQUENCES IN SCHEMA infranettone TO infranettone;
 EOF
 echo -e "${CYAN}End of block Create and configure PostgreSQL database.${NC}"
 # End of block Create and configure PostgreSQL database.
