@@ -56,6 +56,7 @@ echo -e "${CYAN}End of block If the user wants to create a DNS record, ask for t
 # Start of block If the user wants to create a DNS record and has provided a domain name, create the DNS record pointing to the public IP.
 echo -e "${CYAN}Start of block If the user wants to create a DNS record and has provided a domain name, create the DNS record pointing to the public IP.${NC}"
 if [[ "$CREATE_DNS_RECORD" == "Yes" && -n "${DOMAIN_NAME:-}" ]]; then
+    DNS_RECORD_CREATED="false"
     # Start of block Select your DNS provider that is a folder inside scripts/dns. Do a bash select inside this folder
     echo -e "${CYAN}Start of block Select your DNS provider that is a folder inside scripts/dns. Do a bash select inside this folder${NC}"
     BASE_DOMAIN=$(awk -F. '{print $(NF-1)"."$NF}' <<< "$DOMAIN_NAME")
@@ -72,13 +73,14 @@ if [[ "$CREATE_DNS_RECORD" == "Yes" && -n "${DOMAIN_NAME:-}" ]]; then
                     echo "API key cannot be empty. Please try again."
                 done
                 echo "Creating a DNS record with the DNS provider arsys for ${DOMAIN_NAME} pointing to ${PUBLIC_IP}..."
-                bash debug.sh \
+                bash scripts/dns/arsys/run.sh \
                 --login "${BASE_DOMAIN}" \
                 --apikey "${ARSYS_APIKEY}" \
                 --domain "${BASE_DOMAIN}" \
                 --dns "${DOMAIN_NAME}" \
                 --type "A" \
                 --value "${PUBLIC_IP}"
+                DNS_RECORD_CREATED="true"
                 unset ARSYS_APIKEY
                 break
                 ;;
@@ -90,6 +92,45 @@ if [[ "$CREATE_DNS_RECORD" == "Yes" && -n "${DOMAIN_NAME:-}" ]]; then
     done
     echo -e "${GREEN}End of block Select your DNS provider that is a folder inside scripts/dns. Do a bash select inside this folder${NC}"
     # End of block Select your DNS provider that is a folder inside scripts/dns. Do a bash select inside this folder.
+
+    # Start of block Ensure that the DNS has propagated by checking if the domain resolves to the public IP. Use dig or getent in a loop with a timeout.
+    echo -e "${CYAN}Start of block Ensure that the DNS has propagated by checking if the domain resolves to the public IP. Use dig or getent in a loop with a timeout.${NC}"
+    if [[ "${DNS_RECORD_CREATED}" == "true" ]]; then
+        echo -e "${CYAN}Checking DNS propagation for ${DOMAIN_NAME}...${NC}"
+        DNS_PROPAGATED="false"
+        DNS_MAX_ATTEMPTS=24
+        DNS_SLEEP_SECONDS=5
+
+        for ((attempt=1; attempt<=DNS_MAX_ATTEMPTS; attempt++)); do
+            if command -v dig >/dev/null 2>&1; then
+                RESOLVED_IPS=$(dig +short "${DOMAIN_NAME}" A @1.1.1.1 | tr -d '\r')
+            else
+                RESOLVED_IPS=$(getent ahostsv4 "${DOMAIN_NAME}" 2>/dev/null | awk '{print $1}' | sort -u)
+            fi
+
+            if grep -qx "${PUBLIC_IP}" <<< "${RESOLVED_IPS}"; then
+                DNS_PROPAGATED="true"
+                echo -e "${GREEN}DNS propagated successfully: ${DOMAIN_NAME} -> ${PUBLIC_IP}${NC}"
+                break
+            fi
+
+            if (( attempt < DNS_MAX_ATTEMPTS )); then
+                echo "Waiting for propagation (${attempt}/${DNS_MAX_ATTEMPTS})..."
+                sleep "${DNS_SLEEP_SECONDS}"
+            fi
+        done
+
+        if [[ "${DNS_PROPAGATED}" != "true" ]]; then
+            echo -e "${YELLOW}DNS record was created but propagation is not confirmed yet for ${DOMAIN_NAME}. Current resolution:${NC}"
+            if [[ -n "${RESOLVED_IPS:-}" ]]; then
+                echo "${RESOLVED_IPS}"
+            else
+                echo "No A records resolved yet."
+            fi
+        fi
+    fi
+    echo -e "${GREEN}End of block Ensure that the DNS has propagated by checking if the domain resolves to the public IP. Use dig or getent in a loop with a timeout.${NC}"
+    # End of block If the user wants to create a DNS record and has provided a domain name, create the DNS record pointing to the public IP.
 fi
 echo -e "${CYAN}End of block If the user wants to create a DNS record and has provided a domain name, create the DNS record pointing to the public IP.${NC}"
 # End of block If the user wants to create a DNS record and has provided a domain name, create the DNS record pointing to the public IP.
