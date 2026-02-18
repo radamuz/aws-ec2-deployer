@@ -195,6 +195,12 @@ source scripts/ssh/run.sh
 echo -e "${GREEN}Fin Bloque arrancar el proceso de SSH${NC}"
 # Fin Bloque arrancar el proceso de SSH
 
+# Start of block dns
+echo -e "${CYAN}Start of block dns${NC}"
+source scripts/dns/run.sh
+echo -e "${GREEN}End of block dns${NC}"
+# End of block dns
+
 # Preguntar con un select si quieres realizar la instalación de caddy e introducir un nombre de dominio
 echo -e "${CYAN}Inicio Bloque Preguntar con un select si quieres realizar la instalación de caddy e introducir un nombre de dominio${NC}"
 source scripts/caddy/run.sh

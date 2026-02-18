@@ -63,14 +63,23 @@ if [[ "$CREATE_DNS_RECORD" == "Yes" && -n "${DOMAIN_NAME:-}" ]]; then
     select DNS_PROVIDER in $(ls -d scripts/dns/*/ | xargs -n 1 basename); do
         case $DNS_PROVIDER in
             "arsys")
+                while true; do
+                    read -r -s -p "Enter Arsys API key (hidden input): " ARSYS_APIKEY
+                    echo
+                    if [[ -n "${ARSYS_APIKEY}" ]]; then
+                        break
+                    fi
+                    echo "API key cannot be empty. Please try again."
+                done
                 echo "Creating a DNS record with the DNS provider arsys for ${DOMAIN_NAME} pointing to ${PUBLIC_IP}..."
                 bash debug.sh \
                 --login "${BASE_DOMAIN}" \
-                --apikey "" \
+                --apikey "${ARSYS_APIKEY}" \
                 --domain "${BASE_DOMAIN}" \
                 --dns "${DOMAIN_NAME}" \
                 --type "A" \
                 --value "${PUBLIC_IP}"
+                unset ARSYS_APIKEY
                 break
                 ;;
             *)
