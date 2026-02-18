@@ -201,6 +201,12 @@ source scripts/caddy/run.sh
 echo -e "${GREEN}Fin Bloque Preguntar con un select si quieres realizar la instalación de caddy e introducir un nombre de dominio${NC}"
 # Fin Preguntar con un select si quieres realizar la instalación de caddy e introducir un nombre de dominio
 
+# Start of block Set up infranettone database
+echo -e "${CYAN}Start of block Set up infranettone database${NC}"
+source scripts/databases/run.sh
+echo -e "${GREEN}End of block Set up infranettone database${NC}"
+# End of block Set up infranettone database
+
 # Informar al usuario de que puede acceder a la máquina a través del siguiente comando scripts/display-info.sh
 echo -e "${CYAN}Inicio Bloque Informar al usuario de que puede acceder a la máquina a través del siguiente comando scripts/display-info.sh${NC}"
 source scripts/display-info.sh
