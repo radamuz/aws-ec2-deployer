@@ -4,6 +4,10 @@ services:
       context: ../
       dockerfile: main/Dockerfile
     container_name: infranettone-aws-ec2-deployer
+    command:
+      - tail
+      - -f
+      - /dev/null
     ports:
       - "8080:80"
     volumes:
