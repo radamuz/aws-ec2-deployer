@@ -1,0 +1,13 @@
+services:
+  infranettone-aws-ec2-deployer:
+    build:
+      context: ../
+      dockerfile: main/Dockerfile
+    container_name: infranettone-aws-ec2-deployer
+    ports:
+      - "8080:80"
+    volumes:
+      - ./test:/test
+    environment:
+      TEST: test
+    restart: always
