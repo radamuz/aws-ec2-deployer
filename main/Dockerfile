@@ -2,12 +2,14 @@ FROM ubuntu:24.04
 
 ARG DOCKER_GID=999
 
-RUN apt update -y
-
-RUN apt upgrade -y
-
-RUN apt install -y \
-    sudo
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends \
+      sudo \
+      curl \
+      unzip \
+      ca-certificates \
+      gnupg && \
+    rm -rf /var/lib/apt/lists/*
 
 RUN if getent group ubuntu >/dev/null; then \
         groupmod -g 1000 ubuntu; \
@@ -27,10 +29,6 @@ RUN printf "\n# Ubuntu-like colored prompt\nexport PS1='\\[\\e[01;32m\\]\\u@ubun
 
 WORKDIR /home/ubuntu/infranettone-aws-ec2-deployer
 
-COPY --chown=ubuntu:ubuntu . /home/ubuntu/infranettone-aws-ec2-deployer
-
-RUN apt install curl unzip ca-certificates -y
-
 RUN curl "https://awscli.amazonaws.com/awscli-exe-linux-aarch64.zip" -o "awscliv2.zip" && \
     unzip awscliv2.zip && \
     sudo ./aws/install && \
@@ -48,9 +46,14 @@ Components: stable
 Signed-By: /etc/apt/keyrings/docker.asc
 EOF
 
-RUN apt update -y
-
-RUN apt install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin -y
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends \
+      docker-ce \
+      docker-ce-cli \
+      containerd.io \
+      docker-buildx-plugin \
+      docker-compose-plugin && \
+    rm -rf /var/lib/apt/lists/*
 
 RUN if getent group docker >/dev/null; then \
         CURRENT_DOCKER_GID="$(getent group docker | cut -d: -f3)"; \
@@ -61,5 +64,7 @@ RUN if getent group docker >/dev/null; then \
         groupadd -g "$DOCKER_GID" docker; \
     fi && \
     usermod -aG docker ubuntu
+
+COPY --chown=ubuntu:ubuntu . /home/ubuntu/infranettone-aws-ec2-deployer
 
 USER ubuntu

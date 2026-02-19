@@ -5,3 +5,14 @@ curl_debug.log
 response.xml
 response_create.xml
 response_info.xml
+.git
+.gitignore
+.DS_Store
+.idea
+.vscode
+node_modules
+dist
+build
+coverage
+*.log
+*.tmp
