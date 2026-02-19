@@ -47,7 +47,7 @@ cd /tmp
 curl "https://awscli.amazonaws.com/awscli-exe-linux-aarch64.zip" -o "awscliv2.zip"
 unzip awscliv2.zip
 sudo ./aws/install
-rm -f awscliv2.zip
+rm -f awscliv2.zip ./aws
 cd -
 echo -e "${GREEN}Fin Instalamos AWS CLI${NC}"
 # Fin Instalamos AWS CLI
