@@ -3,6 +3,8 @@ services:
     build:
       context: ../
       dockerfile: main/Dockerfile
+      args:
+        DOCKER_GID: ${DOCKER_GID}
     container_name: infranettone-aws-ec2-deployer
     command:
       - tail

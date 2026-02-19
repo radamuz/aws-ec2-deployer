@@ -1,5 +1,7 @@
 FROM ubuntu:24.04
 
+ARG DOCKER_GID=999
+
 RUN apt update -y
 
 RUN apt upgrade -y
@@ -50,6 +52,14 @@ RUN apt update -y
 
 RUN apt install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin -y
 
-RUN usermod -aG docker ubuntu
+RUN if getent group docker >/dev/null; then \
+        CURRENT_DOCKER_GID="$(getent group docker | cut -d: -f3)"; \
+        if [ "$CURRENT_DOCKER_GID" != "$DOCKER_GID" ]; then \
+            groupmod -g "$DOCKER_GID" docker; \
+        fi; \
+    else \
+        groupadd -g "$DOCKER_GID" docker; \
+    fi && \
+    usermod -aG docker ubuntu
 
 USER ubuntu
