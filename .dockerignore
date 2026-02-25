@@ -16,3 +16,4 @@ build
 coverage
 *.log
 *.tmp
+/run.sh

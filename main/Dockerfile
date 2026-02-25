@@ -1,12 +1,16 @@
 FROM ubuntu:24.04
 
 ARG DOCKER_GID=999
+ARG AWSCLI_ARCH=arm64
 
 RUN apt-get update && \
     apt-get install -y --no-install-recommends \
       sudo \
+      openssh-client \
       curl \
       unzip \
+      jq \
+      time \
       ca-certificates \
       gnupg && \
     rm -rf /var/lib/apt/lists/*
@@ -29,7 +33,12 @@ RUN printf "\n# Ubuntu-like colored prompt\nexport PS1='\\[\\e[01;32m\\]\\u@ubun
 
 WORKDIR /home/ubuntu/infranettone-aws-ec2-deployer
 
-RUN curl "https://awscli.amazonaws.com/awscli-exe-linux-aarch64.zip" -o "awscliv2.zip" && \
+RUN case "$AWSCLI_ARCH" in \
+      arm64) AWSCLI_URL="https://awscli.amazonaws.com/awscli-exe-linux-aarch64.zip" ;; \
+      amd64) AWSCLI_URL="https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" ;; \
+      *) echo "AWSCLI_ARCH inválido: $AWSCLI_ARCH (usa arm64 o amd64)" >&2; exit 1 ;; \
+    esac && \
+    curl "$AWSCLI_URL" -o "awscliv2.zip" && \
     unzip awscliv2.zip && \
     sudo ./aws/install && \
     rm -rf awscliv2.zip ./aws
@@ -68,3 +77,5 @@ RUN if getent group docker >/dev/null; then \
 COPY --chown=ubuntu:ubuntu . /home/ubuntu/infranettone-aws-ec2-deployer
 
 USER ubuntu
+
+CMD ["tail", "-f", "/dev/null"]

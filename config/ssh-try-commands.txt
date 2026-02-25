@@ -1,2 +1,2 @@
-docker --version
+docker info > /dev/null
 psql --version

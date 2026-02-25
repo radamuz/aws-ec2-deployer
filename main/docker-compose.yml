@@ -5,16 +5,14 @@ services:
       dockerfile: main/Dockerfile
       args:
         DOCKER_GID: ${DOCKER_GID}
+        AWSCLI_ARCH: ${AWSCLI_ARCH}
     container_name: infranettone-aws-ec2-deployer
-    command:
-      - tail
-      - -f
-      - /dev/null
     ports:
       - "8080:80"
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - ../:/home/ubuntu/infranettone-aws-ec2-deployer
+      - ~/.aws:/home/ubuntu/.aws
     environment:
       TEST: test
     restart: always
