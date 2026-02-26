@@ -1,4 +1,5 @@
 #!/bin/bash
+set -euo pipefail
 
 # Aplicar colores de bash
 RED='\033[0;31m'
@@ -11,6 +12,23 @@ BROWN='\033[0;33m'
 CYAN="\e[36m"
 NC='\033[0m' # No Color
 # Fin Aplicar colores de bash
+
+json_escape() {
+  printf '%s' "$1" | sed 's/\\/\\\\/g; s/"/\\"/g'
+}
+
+upsert_secret() {
+  local secret_name="$1"
+  local secret_payload="$2"
+
+  if aws --profile "$AWS_PROFILE" --region "$AWS_REGION" secretsmanager describe-secret --secret-id "$secret_name" >/dev/null 2>&1; then
+    aws --profile "$AWS_PROFILE" --region "$AWS_REGION" secretsmanager put-secret-value --secret-id "$secret_name" --secret-string "$secret_payload" >/dev/null
+    echo "✅ Secret updated from main script: $secret_name"
+  else
+    aws --profile "$AWS_PROFILE" --region "$AWS_REGION" secretsmanager create-secret --name "$secret_name" --secret-string "$secret_payload" >/dev/null
+    echo "✅ Secret created from main script: $secret_name"
+  fi
+}
 
 # Que aws cli no use less
 echo -e "${CYAN}Inicio Bloque Que aws cli no use less${NC}"
@@ -195,6 +213,19 @@ source scripts/ssh/run.sh
 echo -e "${GREEN}Fin Bloque arrancar el proceso de SSH${NC}"
 # Fin Bloque arrancar el proceso de SSH
 
+# Start of block Save generated postgres user password in Secrets Manager.
+echo -e "${CYAN}Start of block Save generated postgres user password in Secrets Manager.${NC}"
+if [[ -n "${PENDING_SECRET_POSTGRES_USER_PASSWORD:-}" ]]; then
+  POSTGRES_USER_SECRET_NAME="postgresql/credentials/${APP_NAME}/postgres-user"
+  POSTGRES_USER_SECRET_PAYLOAD="{\"engine\":\"postgresql\",\"host\":\"$(json_escape "$PUBLIC_IP")\",\"port\":\"5432\",\"database\":\"postgres\",\"username\":\"postgres\",\"password\":\"$(json_escape "$PENDING_SECRET_POSTGRES_USER_PASSWORD")\",\"appName\":\"$(json_escape "$APP_NAME")\"}"
+  upsert_secret "$POSTGRES_USER_SECRET_NAME" "$POSTGRES_USER_SECRET_PAYLOAD"
+  unset PENDING_SECRET_POSTGRES_USER_PASSWORD
+else
+  echo "No generated postgres user password to store."
+fi
+echo -e "${GREEN}End of block Save generated postgres user password in Secrets Manager.${NC}"
+# End of block Save generated postgres user password in Secrets Manager.
+
 # Start of block dns
 echo -e "${CYAN}Start of block dns${NC}"
 source scripts/dns/run.sh
@@ -212,6 +243,19 @@ echo -e "${CYAN}Start of block Set up infranettone database${NC}"
 source scripts/databases/run.sh
 echo -e "${GREEN}End of block Set up infranettone database${NC}"
 # End of block Set up infranettone database
+
+# Start of block Save generated infranettone user password in Secrets Manager.
+echo -e "${CYAN}Start of block Save generated infranettone user password in Secrets Manager.${NC}"
+if [[ -n "${PENDING_SECRET_INFRANETTONE_USER_PASSWORD:-}" ]]; then
+  INFRANETTONE_USER_SECRET_NAME="postgresql/credentials/${APP_NAME}/infranettone-user"
+  INFRANETTONE_USER_SECRET_PAYLOAD="{\"engine\":\"postgresql\",\"host\":\"$(json_escape "$PUBLIC_IP")\",\"port\":\"5432\",\"database\":\"infranettone\",\"schema\":\"infranettone\",\"username\":\"infranettone\",\"password\":\"$(json_escape "$PENDING_SECRET_INFRANETTONE_USER_PASSWORD")\",\"appName\":\"$(json_escape "$APP_NAME")\"}"
+  upsert_secret "$INFRANETTONE_USER_SECRET_NAME" "$INFRANETTONE_USER_SECRET_PAYLOAD"
+  unset PENDING_SECRET_INFRANETTONE_USER_PASSWORD
+else
+  echo "No generated infranettone user password to store."
+fi
+echo -e "${GREEN}End of block Save generated infranettone user password in Secrets Manager.${NC}"
+# End of block Save generated infranettone user password in Secrets Manager.
 
 # Informar al usuario de que puede acceder a la máquina a través del siguiente comando scripts/display-info.sh
 echo -e "${CYAN}Inicio Bloque Informar al usuario de que puede acceder a la máquina a través del siguiente comando scripts/display-info.sh${NC}"

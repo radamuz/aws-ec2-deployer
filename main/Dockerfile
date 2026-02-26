@@ -11,6 +11,8 @@ RUN apt-get update && \
       unzip \
       jq \
       time \
+      openssl \
+      postgresql-client \
       ca-certificates \
       gnupg && \
     rm -rf /var/lib/apt/lists/*

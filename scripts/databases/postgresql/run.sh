@@ -1,22 +1,53 @@
 # Start of block Set a password for the infranettone database user.
 echo -e "${CYAN}Start of block Set a password for the infranettone database user.${NC}"
-while true; do
-    read -s -p "Enter the password for the user infranettone: " INFRANETTONE_PASSWORD
-    echo
-    read -s -p "Confirm the password for the user infranettone: " INFRANETTONE_PASSWORD_CONFIRM
-    echo
-
-    if [[ -z "$INFRANETTONE_PASSWORD" ]]; then
-        echo "❌ The password cannot be empty."
-        continue
+generate_strong_password() {
+    local generated_password
+    if ! command -v openssl >/dev/null 2>&1; then
+        echo "❌ OpenSSL is required to generate an automatic password." >&2
+        return 1
     fi
+    while true; do
+        generated_password=$(openssl rand -base64 48)
+        if [[ "$generated_password" =~ [A-Z] && "$generated_password" =~ [a-z] && "$generated_password" =~ [0-9] && "$generated_password" =~ [\!\@\#\%\^\*\_\=\+\.\-] ]]; then
+            echo "$generated_password"
+            return 0
+        fi
+    done
+}
 
-    if [[ "$INFRANETTONE_PASSWORD" == "$INFRANETTONE_PASSWORD_CONFIRM" ]]; then
-        echo "Password confirmed. Continuing..."
-        break
-    else
-        echo "Passwords do not match. Please try again."
-    fi
+echo "Choose how you want to set the password for the user infranettone:"
+select INFRANETTONE_PASSWORD_MODE in "Set manually" "Generate automatically"; do
+    case "$INFRANETTONE_PASSWORD_MODE" in
+        "Set manually")
+            while true; do
+                read -s -p "Enter the password for the user infranettone: " INFRANETTONE_PASSWORD
+                echo
+                read -s -p "Confirm the password for the user infranettone: " INFRANETTONE_PASSWORD_CONFIRM
+                echo
+
+                if [[ -z "$INFRANETTONE_PASSWORD" ]]; then
+                    echo "❌ The password cannot be empty."
+                    continue
+                fi
+
+                if [[ "$INFRANETTONE_PASSWORD" == "$INFRANETTONE_PASSWORD_CONFIRM" ]]; then
+                    echo "Password confirmed. Continuing..."
+                    break
+                else
+                    echo "Passwords do not match. Please try again."
+                fi
+            done
+            break
+            ;;
+        "Generate automatically")
+            INFRANETTONE_PASSWORD=$(generate_strong_password)
+            echo "A strong password was generated automatically."
+            break
+            ;;
+        *)
+            echo "Invalid option, please select 1 or 2."
+            ;;
+    esac
 done
 echo -e "${CYAN}End of block Set a password for the infranettone database user.${NC}"
 # End of block Set a password for the infranettone database user.
@@ -112,3 +143,8 @@ GRANT USAGE, SELECT, UPDATE ON ALL SEQUENCES IN SCHEMA infranettone TO infranett
 EOF
 echo -e "${CYAN}End of block Create and configure PostgreSQL database.${NC}"
 # End of block Create and configure PostgreSQL database.
+
+if [[ "$INFRANETTONE_PASSWORD_MODE" == "Generate automatically" ]]; then
+  export PENDING_SECRET_INFRANETTONE_USER_PASSWORD="$INFRANETTONE_PASSWORD"
+  echo "Automatic password prepared. The secret will be created from the main script."
+fi
